@@ -2,6 +2,7 @@ var nodemailer = require('nodemailer');
 require('dotenv').config();
 crypto=require('crypto')
 connection=require('./conection')
+// for forget password
 exports.forgetpassword=function (req,res) {
    var email=req.body.email;
    connection.query('SELECT * FROM fans  WHERE email = ?',[email],function (error,results) {
@@ -64,6 +65,7 @@ exports.forgetpassword=function (req,res) {
    })
     
 }
+//for reset password
 
 exports.resetpassword=function (req,res) {
   var email=req.body.email;
@@ -112,3 +114,4 @@ exports.resetpassword=function (req,res) {
   })
   
 }
+// for email verification

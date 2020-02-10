@@ -15,7 +15,7 @@ router.get("/:id",(req,res)=>{
     else
     res.send(req.params.id);
 })
-router.post('/register/fans',login.registerfan);
+router.post('/register/signup',login.registerfan);
 router.post('/login',login.login);
 router.post('/forget',forget.forgetpassword);
 router.post('/resetpassword',forget.resetpassword);

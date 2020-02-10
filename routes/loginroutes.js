@@ -1,5 +1,6 @@
 connection=require('./conection')
-
+var crypto=require('crypto')
+// for signup
 exports.registerfan = function(req,res){
     // console.log("req",req.body);
     var today = new Date();
@@ -62,7 +63,7 @@ exports.registerfan = function(req,res){
   }
 
  
-
+// for login
   exports.login = function(req,res){
     var email= req.body.email;
     var password = req.body.password;
@@ -78,13 +79,21 @@ exports.registerfan = function(req,res){
       if(results.length >0){
         if(results[0].password == password){
           console.log(results);
-          message=results[0].firstname+" "+results[0].lastname
-          console.log(message)
+          fullname=results[0].firstname+" "+results[0].lastname
+          emailid=results[0].email
+          console.log(fullname)
+          var token = crypto.randomBytes(10).toString('hex');
+          connection.query('UPDATE fans SET usertoken=? WHERE email=?',[token,emailid],function(error,results){
+            if(error){console.log(error)}
+            else{}
+          })
           res.send({
             "code":200,
             "success":"login sucessfull",
             "status":true,
-            "message":message
+            "message":fullname,
+            "token":token,
+            "emailid":email
               });
         }
         else{
