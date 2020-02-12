@@ -2,6 +2,7 @@ var nodemailer = require('nodemailer');
 require('dotenv').config();
 crypto=require('crypto')
 connection=require('./conection')
+var async = require("async");
 // for forget password
 exports.forgetpassword=function (req,res) {
    var email=req.body.email;
@@ -28,6 +29,11 @@ exports.forgetpassword=function (req,res) {
               }
               else{
                 console.log("token in database is update")
+                res.send({
+                  "sendstatus":true,
+                  "statusmessage":"resetpassword code is send to"+req.body.email,
+                  "redirectstatus":true
+              })
               }
             })
 
@@ -43,7 +49,7 @@ exports.forgetpassword=function (req,res) {
                 from: process.env.Gmail,
                 to:req.body.email,
                 subject: 'for password reset of bandbazaar',
-                text: 'hey!'+results[0].firstname+" "+results[0].lastname+  "  enter the code below for reset your password - "+token,
+                html: 'hey!'+results[0].firstname+" "+results[0].lastname+  "  enter the code below for reset your password - "+'<b>'+token+'</b>',
               
               };
               
@@ -52,13 +58,10 @@ exports.forgetpassword=function (req,res) {
                   console.log(error);
                 } else {
                   console.log('Email sent: ' + info.response);
-                  res.send({
-                      "sendstatus":true,
-                      "statusmessage":"resetpassword code is send to"+req.body.email,
-                      "redirectstatus":true
-                  })
+                 
                 }
               });
+             
           }
        }
        
