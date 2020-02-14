@@ -73,7 +73,7 @@ exports.forgetpassword=function (req,res) {
 exports.resetpassword=function (req,res) {
   var email=req.body.email;
   var otp=req.body.otp;
-  var password=req.body.password;
+  
   connection.query('SELECT * FROM fans  WHERE email = ?',[email],function(error,results){
         if(error){
           res.send({
@@ -92,7 +92,11 @@ exports.resetpassword=function (req,res) {
             else{
               // for update the otp
               if(results[0].recoveryotp==otp){
-                connection.query('UPDATE fans SET password=? WHERE email=?',[password,email],function(error,results){
+                var mykey = crypto.createCipher('aes-128-cbc', 'mypassword');
+               var haspassword = mykey.update(req.body.password, 'utf8', 'hex')
+              haspassword += mykey.final('hex');
+
+                connection.query('UPDATE fans SET password=? WHERE email=?',[haspassword,email],function(error,results){
                   if(error){
                     console.log(error)
                   }

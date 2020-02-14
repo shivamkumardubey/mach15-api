@@ -4,11 +4,15 @@ var crypto=require('crypto')
 exports.registerfan = function(req,res){
     // console.log("req",req.body);
     var today = new Date();
+    //for pasword hasing
+    var mykey = crypto.createCipher('aes-128-cbc', 'mypassword');
+    var haspassword = mykey.update(req.body.password, 'utf8', 'hex')
+    haspassword += mykey.final('hex');
     var users={
       "firstname":req.body.firstname,
       "lastname":req.body.lastname,
       "email":req.body.email,
-      "password":req.body.password,
+      "password":haspassword,
       
     }
 
@@ -77,7 +81,14 @@ exports.registerfan = function(req,res){
     }else{
       // console.log('The solution is: ', results);
       if(results.length >0){
-        if(results[0].password == password){
+       //for dehasing the password
+       var crypto = require('crypto');
+
+       var mykey = crypto.createDecipher('aes-128-cbc', 'mypassword');
+       var dehaspassword = mykey.update(results[0].password, 'hex', 'utf8')
+       dehaspassword += mykey.final('utf8');
+
+        if(dehaspassword == password){
           console.log(results);
           fullname=results[0].firstname+" "+results[0].lastname
           emailid=results[0].email
